@@ -1,188 +1,46 @@
-d<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Älskling 38 år!</title>
-    <link rel="icon" href="img/logo.png" type="image/png">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #D5DDE3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .navbar {
-            width: 100%;
-            background-color: #707E96;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100px;
-        }
-        .navbar h1 {
-            color: #D5DDE3;
-            font-size: 2em;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-        .navbar img {
-            height: 60px; /* Adjust the image height as needed */
-            margin-right: 10px;
-        }
-        .content {
-            margin-top: 60px; /* Space for the fixed navbar */
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .intro-text {
-            margin-top: 120px; /* Adjust as needed for spacing from the navbar */
-            padding: 0 20px;
-            text-align: center;
-            font-size: 1.2em;
-            color: #707E96;
-        }
-        .card {
-            background-color: white;
-            border: 3px solid #707E96;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
-            max-width: 300px;
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-        }
-        .card img {
-            width: 100%;
-            height: auto;
-        }
-        .card-body {
-            padding: 15px;
-        }
-        .card-title {
-            font-size: 1.5em;
-            color: #F88180;
-            margin: 0 0 10px;
-        }
-        .card-text {
-            font-size: 1em;
-            color: #707E96;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Äntligen Älskling 40!</title>
+
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#0b0d12" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
-    <div class="navbar">
-        <h1>
-            <img src="img/logo.png" alt="Logo"> 
-            Älskling 38 år!
-        </h1>
+  <header class="hero" aria-label="Header">
+    <img id="logo" class="logo" alt="Logo" />
+    <h1 id="title" class="title">Äntligen Älskling 40!</h1>
+  </header>
+
+  <section class="countdownRegion" aria-label="Nedräkning">
+    <div class="countdown">
+      <div class="countLabel">Tid kvar</div>
+      <div id="timer" class="timer">
+        <div class="tbox"><div class="tval" id="dd">--</div><div class="tcap">dagar</div></div>
+        <div class="tbox"><div class="tval" id="hh">--</div><div class="tcap">tim</div></div>
+        <div class="tbox"><div class="tval" id="mm">--</div><div class="tcap">min</div></div>
+      </div>
+      <div class="actions">
+        <span id="status" class="status"></span>
+      </div>
     </div>
-    <div class="intro-text">
-        <p>Välkommen till vår <b>#DateDay2@2024</b>!</p>
-        <p>Här kommer det att komma, vid valda tillfällen, lite ledtrådar som du kan använda dig av att förstå vart vi ska, vad vi ska göra, när det är, vad du ska ta med osv.</p>
+  </section>
+ 
+  <main class="main">
+    <div class="cardsTop">
+      <button id="refreshBtn" class="btn refreshBtn" type="button" aria-label="Uppdatera" title="Uppdatera">
+        <img class="btnIcon" src="img/refresh.png" alt="">
+      </button>
     </div>
-    <div class="content">
-        <div class="card">
-            <img src="img/bikini.jpg" alt="bad">
-            <div class="card-body">
-                <h2 class="card-title">Ett skönt bad</h2>
-                <p class="card-text">Tänk att strosa förbi en badmöjlighet med tropisk känsla och inte ha möjlighet att plumsa i. Det får ju inte hända!</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/book.jpg" alt="bok">
-            <div class="card-body">
-                <h2 class="card-title">En Bra Bok</h2>
-                <p class="card-text">Fokus kommer bli att slappna av och njuta av upplevelsen, att ta det lugnt och njuta av en bra bok är kanske en bra idé.</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/fika.jpg" alt="fika">
-            <div class="card-body">
-                <h2 class="card-title">Annorlunda Mat</h2>
-                <p class="card-text">Visst blir det en hel del godsaker på vår trip. Jag lovar dock att vi inte ska besöka "Museum of disgusting food".</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/hike.jpg" alt="hike">
-            <div class="card-body">
-                <h2 class="card-title">Naturrum</h2>
-                <p class="card-text">Visst är naturen härlig att traska i speciellt när den bjuder på himmeska vyer och tropiskt klimat.</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/lodge.jpg" alt="infinity">
-            <div class="card-body">
-                <h2 class="card-title">Sova som en stock</h2>
-                <p class="card-text">God morgon, god middag, god kväll, var du än är. Just en god morgon tror jag du kommer få efter en resa som denna.</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/infinity.jpg" alt="infinity">
-            <div class="card-body">
-                <h2 class="card-title">Oändligt med mys och pys</h2>
-                <p class="card-text">Tjänare, var ett tag sedan. Men som du kan se vankas det mys och lugn och ro, eller?</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/shoes.jpg" alt="shoes">
-            <div class="card-body">
-                <h2 class="card-title">Skor och Dylikt</h2>
-                <p class="card-text">Ibland säger man att en bild säger mer än 1000 ord, om det är så i detta fall får man bedömma själv :).</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/transportation.jpg" alt="transportation">
-            <div class="card-body">
-                <h2 class="card-title">Transport</h2>
-                <p class="card-text">Jahaja, det blir varken tåg, buss, apostlahästar eller flyg till vår destination. Som det kan gå.</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/we_have_a_date.png" alt="The Date">
-            <div class="card-body">
-                <h2 class="card-title">It's a Date!</h2>
-                <p class="card-text">Ja, datumet på bilden stämmer inte, ta -10 så du får din dag istället. Boka in med detsamma. Nej, inga ursäkter här älskling!</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/open_mind.png" alt="Open your mind">
-            <div class="card-body">
-                <h2 class="card-title">Ha ett öppet sinne</h2>
-                <p class="card-text">För denna dejten gäller det att hålla ett öppet sinne för eventuella nymodigheter. Kanske kommer du att utmanas.</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="img/after_vacay_date.png" alt="After vacation">
-            <div class="card-body">
-                <h2 class="card-title">När är det då?</h2>
-                <p class="card-text">Den som väntar på något gott. Ja, i skrivande stund vet vi inte riktigt. Troligtvis efter semestern, men vem vet.</p>
-                <p class="card-text"><b>XOXO / Pusseboy</b></p>
-            </div>
-        </div>
-    </div>
+    <div id="grid" class="grid" aria-label="Kortlista"></div>
+  </main>
+
+  <div id="confettiHost" class="confettiHost" aria-hidden="true"></div>
+
+  <script src="./app.js" defer></script>
 </body>
 </html>

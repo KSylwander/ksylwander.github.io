@@ -1,0 +1,40 @@
+{
+  "site": {
+    "title": "Äntligen Älskling 40!",
+    "subtitle": "Snart är det dags…",
+    "logo": "img/logo.png",
+    "eventTime": "2026-06-17T00:00:00+01:00"
+  },
+  "cards": [
+    {
+      "id": "card-01",
+      "title": "En liten hint…",
+      "image": "img/lodge.jpg",
+      "text": "Här är hela texten som syns när kortet är öppnat.",
+      "unlockAt": "2026-01-14T00:00:00+01:00",
+      "preview": {
+        "teaser": "Något fint väntar bakom låset…"
+      }
+    },
+    {
+      "id": "card-02",
+      "title": "En till sak",
+      "image": "images/cards/02.jpg",
+      "text": "Mer text som blir synlig efter upplåsning.",
+      "unlockAt": "2026-03-14T00:00:00+01:00",
+      "preview": {
+        "teaser": "Inte än… men snart."
+      }
+    },
+    {
+      "id": "card-03",
+      "title": "En till sak",
+      "image": "images/cards/02.jpg",
+      "text": "Mer text som blir synlig efter upplåsning.",
+      "unlockAt": "2026-03-14T00:00:00+01:00",
+      "preview": {
+        "teaser": "Inte än… men snart."
+      }
+    }
+  ]
+}
