@@ -81,10 +81,60 @@ function cardState(card, openedSet) {
 function friendlyDate(iso) {
   try {
     const d = new Date(iso);
-    return d.toLocaleString("sv-SE", { dateStyle: "medium", timeStyle: "short" });
+    return d.toLocaleDateString("sv-SE", { dateStyle: "medium" });
   } catch {
     return iso;
   }
+}
+
+function uiIcon(key) {
+  const url = model?.site?.ui?.icons?.[key];
+  return typeof url === "string" && url.trim().length ? url.trim() : null;
+}
+
+function stateIconHtml(state) {
+  const key = state === "locked" ? "locked" : state === "unlockable" ? "unlockable" : null;
+  const iconUrl = key ? uiIcon(key) : null;
+
+  if (iconUrl) {
+    return `<img class="stateIcon" src="${escapeHtml(iconUrl)}" alt="" aria-hidden="true">`;
+  }
+
+  // fallback om du inte har valt bilder än
+  if (state === "unlockable") return `<span class="unlockIcon" aria-hidden="true"></span>`;
+  return `<span class="lockIcon" aria-hidden="true"></span>`;
+}
+
+function openedHeaderHtml(card) {
+  const iconUrl = card?.headerIcon || uiIcon("openedHeader") || null;
+  if (!iconUrl) return "";
+  return `<img class="headerIcon" src="${escapeHtml(iconUrl)}" alt="" aria-hidden="true">`;
+}
+
+// ÖPPET kort: header (ikon + titel) + ev bild + text
+function openInnerHtml(card) {
+  return `
+    <div class="cardHeader">
+      ${openedHeaderHtml(card)}
+      <h2>${escapeHtml(card.title)}</h2>
+      <span class="openedTag">Öppnat</span>
+    </div>
+    ${card.image ? `<img src="${escapeHtml(card.image)}" alt="">` : ""}
+    <p class="cardText">${escapeHtml(card.text)}</p>
+  `;
+}
+
+function closedInnerHtml(card, state, teaser) {
+  const label = state === "unlockable" ? "Redo att öppnas" : "";
+  const t = (teaser && String(teaser).trim().length) ? teaser : card.title;
+
+  return `
+    <div class="closedHeader">
+      ${stateIconHtml(state)}
+      <h2 class="teaserTitle">${escapeHtml(t)}</h2>
+    </div>
+    ${label ? `<div class="meta">${label}</div>` : ``}
+  `;
 }
 
 function escapeHtml(s) {
@@ -116,42 +166,30 @@ function render() {
 
   els.grid.innerHTML = "";
   for (const c of cards) {
-    const state = cardState(c, opened);
     const el = document.createElement("article");
+    const state = cardState(c, opened);
+    const unlockLabel = friendlyDate(c.unlockAt);          // datum-only
+    const teaser = c.preview?.teaser ?? c.title ?? "Snart…";
+
     el.className = `card ${state}`;
     el.dataset.cardId = c.id;
 
-    const unlockLabel = friendlyDate(c.unlockAt);
-    const teaser = c.preview?.teaser ?? "Snart…";
-
     el.innerHTML = `
-      <div class="inner">
-        <h2>${escapeHtml(c.title)}</h2>
-        <div class="meta">${state === "open" ? "Öppnat" : state === "unlockable" ? "Redo att öppnas" : "Låst"}</div>
+    <div class="inner">
+        ${state === "open" ? openInnerHtml(c) : closedInnerHtml(c, state, teaser)}
+    </div>
 
-        <div class="content">
-          ${state === "open" ? `
-            ${c.image ? `<img src="${escapeHtml(c.image)}" alt="">` : ""}
-            <p>${escapeHtml(c.text)}</p>
-          ` : `
-            <p style="color: rgba(255,255,255,0.72); margin:0;">
-              ${escapeHtml(teaser)}
-            </p>
-          `}
+    <div class="door" aria-hidden="true"></div>
+
+    ${state !== "open" ? `
+        <div class="stateBadge ${state}">
+                ${
+                    state === "unlockable"
+                        ? `<button class="openBtn openBtnSmall" type="button">Öppna</button>`
+                        : `<span class="dateText">${escapeHtml(unlockLabel)}</span>`
+                }
         </div>
-      </div>
-
-      <div class="door" aria-hidden="true"></div>
-
-      ${state !== "open" ? `
-        <div class="lockBadge">
-          <div class="teaser">${escapeHtml(teaser)}</div>
-          <div class="when">
-            <span class="pill"><span class="lockIcon"></span><span>${escapeHtml(unlockLabel)}</span></span>
-          </div>
-          ${state === "unlockable" ? `<button class="openBtn" type="button">Öppna</button>` : ``}
-        </div>
-      ` : ``}
+    ` : ``}
     `;
 
     // click behavior
@@ -181,20 +219,12 @@ function render() {
         el.classList.remove("unlockable");
         el.classList.add("open");
 
-        // Ta bort badge efter liten delay (så animationen syns)
         setTimeout(() => {
-          const badge = el.querySelector(".lockBadge");
-          if (badge) badge.remove();
-          // rendera content efter öppning
-          const content = el.querySelector(".content");
-          if (content) {
-            content.innerHTML = `
-              ${c.image ? `<img src="${escapeHtml(c.image)}" alt="">` : ""}
-              <p>${escapeHtml(c.text)}</p>
-            `;
-          }
-          const meta = el.querySelector(".meta");
-          if (meta) meta.textContent = "Öppnat";
+            const badge = el.querySelector(".stateBadge");
+            if (badge) badge.remove();
+
+            const inner = el.querySelector(".inner");
+            if (inner) inner.innerHTML = openInnerHtml(c);
         }, 450);
 
         burstConfetti(el);

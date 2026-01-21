@@ -18,6 +18,14 @@ html{
   overscroll-behavior: none; /* minskar “kant” vid bounce */
 }
 
+html, body{
+  overflow-x: hidden;
+}
+
+img, svg, canvas{
+  max-width: 100%;
+}
+
 body{
   margin:0;
   min-height: 100vh; /* viktigt: inte låsa till height:100% */
@@ -31,13 +39,30 @@ body{
 
 .hero{
   padding: 22px 16px 10px;
-  border-bottom: 1px solid rgba(var(--accent2-rgb),0.10);
+  border-bottom: 3px solid rgba(var(--accent2-rgb));
   background: linear-gradient(to bottom, rgba(var(--accent2-rgb), 0.06), transparent 70%);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 10px;
+}
+
+.hero{
+  position: relative;
+}
+
+/* Top-right placement (header) */
+.refreshBtnTop{
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  right: calc(14px + env(safe-area-inset-right));
+  z-index: 2;
+}
+
+/* Leave room for the top-right refresh button on small screens */
+@media (max-width: 520px){
+  .title{ padding-inline: 64px; }
 }
 
 .logo{
@@ -61,9 +86,11 @@ body{
 .countdownRegion{
   padding: 12px 16px 0;
 }
+
 .countdown{
   max-width: 760px;
   margin: 0 auto;
+  position: relative;
 }
 
 .countdown::before{
@@ -231,7 +258,7 @@ body{
   height:auto;
   display:block;
   border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(var(--accent2-rgb),0.25);
 }
 
 .card p{
@@ -269,8 +296,8 @@ body{
 }
 
 .card.locked .door::before{
-  opacity: 0.9;
-  animation: shimmer 2.4s linear infinite;
+  animation: none;
+  opacity: 0,2; 
 }
 
 @keyframes shimmer{
@@ -401,4 +428,135 @@ body{
     transform: translateY(110vh) rotate(540deg);
     opacity: 0.2;
   }
+}
+
+/* Teaser-rubrik (låst/olåst men ej öppnad) */
+.teaserTitle{
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.15;
+  color: rgba(255,255,255,0.92);
+}
+
+/* Ge plats för badge + knapp så rubriken inte hamnar bakom */
+.card.locked .inner,
+.card.unlockable .inner{
+  padding-bottom: 78px;
+}
+
+.stateBadge{
+  position:absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stateBadge .pill{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  text-align:center;
+}
+
+.stateBadge .dateText{
+  display:block;
+  width:100%;
+  text-align:center;
+  color: var(--accent2);
+}
+
+/* mindre knapp */
+.openBtnSmall{
+  padding: 6px 9px;
+  font-size: 12px;
+  border-radius: 10px;
+}
+
+/* Öppet kort: header */
+.cardHeader{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.headerIcon{
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+}
+
+.openedTag{
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+}
+
+.cardText{
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+  color: rgba(255,255,255,0.86);
+}
+
+/* Ikoner i badge (låst/redo) */
+.stateIcon{
+  width: 30px;
+  height: 30px;
+  max-width: 30px;
+  max-height: 30px;
+  object-fit: contain;
+  flex: 0 0 18px;
+  display: block;
+}
+
+/* Header-ikon när kortet är öppet */
+.headerIcon{
+  width: 26px;
+  height: 26px;
+  max-width: 26px;
+  max-height: 26px;
+  object-fit: contain;
+  flex: 0 0 26px;
+  display: block;
+}
+
+/* Endast innehållsbilden i öppet kort ska få ram */
+.card.open .inner > img{
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius: 14px;
+}
+
+.closedHeader{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.closedHeader .stateIcon{
+  width:30px;
+  height:30px;
+  flex:0 0 auto;
 }
