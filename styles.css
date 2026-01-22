@@ -237,6 +237,24 @@ body{
   justify-content: center;
 }
 
+/* Gör tap på refresh-knappen synlig på iOS */
+#refreshBtn{
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Visuell feedback när man trycker */
+#refreshBtn:active{
+  transform: scale(0.85);
+  filter: brightness(1.15);
+}
+
+/* Om du använder en ikon <img> eller <svg> inuti knappen */
+#refreshBtn:active img,
+#refreshBtn:active svg{
+  transform: scale(0.85);
+}
+
 .btnIcon{
   width: 18px;
   height: 18px;
