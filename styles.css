@@ -255,6 +255,26 @@ body{
   transform: scale(0.85);
 }
 
+/* Make sure the element can show press feedback */
+#refreshBtn{
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Pressed animation */
+#refreshBtn.is-pressed{
+  transform: scale(0.94);
+  filter: brightness(1.15);
+}
+
+/* If you have an img/svg inside */
+#refreshBtn.is-pressed img,
+#refreshBtn.is-pressed svg{
+  transform: scale(0.94);
+}
+
 .btnIcon{
   width: 18px;
   height: 18px;

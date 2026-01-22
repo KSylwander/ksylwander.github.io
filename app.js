@@ -33,6 +33,25 @@ console.log("BUILD", "2026-01-22-1");
   window.location.replace(u.toString());
 })();
 
+(function wireRefreshPressFeedback() {
+  const btn = els.refreshBtn;
+  if (!btn) return;
+
+  const pressOn  = () => btn.classList.add("is-pressed");
+  const pressOff = () => btn.classList.remove("is-pressed");
+
+  // Pointer events (modern)
+  btn.addEventListener("pointerdown", pressOn, { passive: true });
+  btn.addEventListener("pointerup", pressOff, { passive: true });
+  btn.addEventListener("pointercancel", pressOff, { passive: true });
+  btn.addEventListener("pointerleave", pressOff, { passive: true });
+
+  // Fallback for older iOS behavior
+  btn.addEventListener("touchstart", pressOn, { passive: true });
+  btn.addEventListener("touchend", pressOff, { passive: true });
+  btn.addEventListener("touchcancel", pressOff, { passive: true });
+})();
+
 function readOpenedSet() {
   try {
     const raw = localStorage.getItem(OPENED_KEY);
