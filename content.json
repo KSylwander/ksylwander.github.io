@@ -26,6 +26,7 @@
     {
       "id": "card-26",
       "title": "En liten hint 2",
+      "headerIcon": "img/calendar.png",
       "image": "img/lodge.jpg",
       "text": "Här är hela texten som syns när kortet är öppnat.",
       "unlockAt": "2026-01-17T00:00:00+01:00",
