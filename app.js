@@ -1,5 +1,6 @@
 const CONTENT_URL = "./content.json";
 const OPENED_KEY = "openedCards:v1";
+const CONTENT_VERSION_KEY = "contentVersion:v1";
 
 const els = {
   title: document.getElementById("title"),
@@ -184,7 +185,12 @@ function escapeHtml(s) {
 }
 
 function render() {
-  const opened = readOpenedSet();
+  if (!model) return;
+
+  // VIKTIGT: tvinga en full omrender vid varje ny loadContent()
+  els.grid.innerHTML = "";
+
+  const opened = readOpenedSet(); // läs varje render (inte cache:a globalt)
 
   // header
   document.title = model.site?.title || "Sida";
@@ -521,57 +527,40 @@ function burstConfetti(cardEl) {
 }
 
 async function loadContent({ bustCache = true } = {}) {
-  const seq = ++contentLoadSeq;
-
   try {
-    // Avbryt ev pågående fetch (så gammal aldrig kan vinna)
-    if (contentAbort) contentAbort.abort();
-    contentAbort = new AbortController();
-
-    // Absolut URL (tar bort alla “relativ path”-edgecases i standalone)
-    const base = new URL(".", window.location.href);
-    const u = new URL(CONTENT_URL, base);
-
-    if (bustCache) u.searchParams.set("t", String(Date.now()));
-
-    const res = await fetch(u.toString(), {
-      cache: "reload",
-      headers: { "cache-control": "no-cache", "pragma": "no-cache" },
-      signal: contentAbort.signal
-    });
-
+    const url = bustCache ? `${CONTENT_URL}?t=${Date.now()}` : CONTENT_URL;
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const nextModel = await res.json();
 
-    // Om en nyare load har startat efter denna → ignorera
-    if (seq !== contentLoadSeq) return;
+    const next = await res.json();
 
-    model = nextModel;
+    // Om content bytts: resetta state i denna container (WebApp har egen localStorage)
+    const prevVer = localStorage.getItem(CONTENT_VERSION_KEY);
+    const nextVer = String(next?.version || "");
 
-    // Render kan också kasta (då vill vi se felet tydligt)
-    try {
-      render();
-    } catch (err) {
-      console.error("render() failed:", err);
-      setStatus(`Render-fel: ${String(err?.message || err)}`);
-      return;
+    if (nextVer && nextVer !== prevVer) {
+      localStorage.setItem(CONTENT_VERSION_KEY, nextVer);
+      localStorage.removeItem(OPENED_KEY); // resetta öppnade kort så UI matchar nya content
     }
 
-    // Tydlig indikator att refresh faktiskt “tog”
-    setStatus(`Content laddad: ${new Date().toLocaleTimeString("sv-SE")}`);
+    model = next;
+
+    // Bra indikator på att render kör på nya datan
+    setStatus(`Laddad ${new Date().toLocaleTimeString("sv-SE")} · v=${nextVer || "?"}`);
+
+    render();
 
     if (timerInterval) clearInterval(timerInterval);
     updateCountdown();
     timerInterval = setInterval(updateCountdown, 1000);
-
   } catch (e) {
-    if (e.name === "AbortError") return;
-    console.error("loadContent failed:", e);
-    setStatus(`Kunde inte hämta content: ${String(e?.message || e)}`);
+    console.error(e);
+    setStatus(`Kunde inte hämta content: ${String(e.message || e)}`);
   }
 }
 
-els.refreshBtn.addEventListener("click", () => loadContent({ bustCache: true }));
+els.refreshBtn?.addEventListener("click", () => hardReset());
+// els.refreshBtn.addEventListener("click", () => loadContent({ bustCache: true }));
 
 // iOS standalone återställer ofta sidan från BFCache/snapshot.
 // Då måste vi aktivt trigga omhämtning när sidan “kommer tillbaka”.
@@ -586,5 +575,11 @@ document.addEventListener("visibilitychange", () => {
     loadContent({ bustCache: true });
   }
 });
+
+function hardReset() {
+  localStorage.removeItem(OPENED_KEY);
+  localStorage.removeItem(CONTENT_VERSION_KEY);
+  loadContent({ bustCache: true });
+} 
 
 loadContent({ bustCache: true });
