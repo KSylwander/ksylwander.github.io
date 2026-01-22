@@ -559,8 +559,8 @@ async function loadContent({ bustCache = true } = {}) {
   }
 }
 
-els.refreshBtn?.addEventListener("click", () => hardReset());
-// els.refreshBtn.addEventListener("click", () => loadContent({ bustCache: true }));
+// els.refreshBtn?.addEventListener("click", () => hardReset());
+els.refreshBtn.addEventListener("click", () => loadContent({ bustCache: true }));
 
 // iOS standalone återställer ofta sidan från BFCache/snapshot.
 // Då måste vi aktivt trigga omhämtning när sidan “kommer tillbaka”.
