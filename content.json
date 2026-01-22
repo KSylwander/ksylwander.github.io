@@ -1,5 +1,5 @@
 {
-  "version": "2026-01-22-04",
+  "version": "2026-01-22-05",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -16,21 +16,21 @@
   "cards": [
     {
       "id": "card-27",
-      "title": "En liten hint…",
+      "title": "Kort 1…",
       "headerIcon": "img/calendar.png",
       "image": "img/lodge.jpg",
       "imageAlt": "En stuga i fjällen",
       "text": "Här är hela texten som syns när kortet är öppnat. Nu ska vi se hur mycket text vi kan ha här. Vi behöver ändå få plats med en hel del tycker jag, det är därför jag skriver så mycket här. Minst 500 tecken är tanken iaf, eller åtminstonde 300. NU ska vi se hur detta ser ut, eller hur!?",
-      "unlockAt": "2026-02-18T00:00:00+01:00",
+      "unlockAt": "2026-02-20T00:00:00+01:00",
       "preview": { "teaser": "Något fint väntar bakom låset…" }
     },
     {
       "id": "card-26",
-      "title": "En liten hint 2",
+      "title": "Kort 2",
       "headerIcon": "img/calendar.png",
       "image": "img/lodge.jpg",
       "text": "Här är hela texten som syns när kortet är öppnat.",
-      "unlockAt": "2026-02-20T00:00:00+01:00",
+      "unlockAt": "2026-02-21T00:00:00+01:00",
       "preview": {
         "teaser": "Något fint väntar bakom låset 2…"
       }
