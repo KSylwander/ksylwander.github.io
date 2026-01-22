@@ -1,5 +1,5 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -19,7 +19,7 @@
       "title": "Mission: Juni 🕵️‍♀️",
       "headerIcon": "img/calendar.png",
       "text": "Älskling - Du har ett uppdrag, ta reda på om du kan vara ledig 15-18 Juni, eller 22-24 Juni.",
-      "unlockAt": "2026-01-25T00:00:00+01:00",
+      "unlockAt": "2026-01-22T17:18:00+01:00",
       "preview": {
         "teaser": "Ett hemligt uppdrag väntar"
       }
