@@ -108,24 +108,29 @@ function stateIconHtml(state) {
 function openedHeaderHtml(card) {
   const iconUrl = card?.headerIcon || uiIcon("openedHeader") || null;
   if (!iconUrl) return "";
-  return `<img class="headerIcon" src="${escapeHtml(iconUrl)}" alt="" aria-hidden="true">`;
+
+  return `
+    <span class="headerIconWrap" aria-hidden="true">
+      <img class="headerIconImg" src="${escapeHtml(iconUrl)}" alt="">
+    </span>
+  `;
 }
 
-// ÖPPET kort: header (ikon + titel) + ev bild + text
 function openInnerHtml(card) {
+  const alt = card?.imageAlt ? escapeHtml(card.imageAlt) : "";
   return `
-    <div class="cardHeader">
+    <div class="cardHeader openHeader">
       ${openedHeaderHtml(card)}
-      <h2>${escapeHtml(card.title)}</h2>
-      <span class="openedTag">Öppnat</span>
+      <h2 class="openTitle">${escapeHtml(card.title)}</h2>
     </div>
-    ${card.image ? `<img src="${escapeHtml(card.image)}" alt="">` : ""}
+
+    ${card.image ? `<img class="openMedia" src="${escapeHtml(card.image)}" alt="${alt}">` : ""}
+
     <p class="cardText">${escapeHtml(card.text)}</p>
   `;
 }
 
 function closedInnerHtml(card, state, teaser) {
-  const label = state === "unlockable" ? "Redo att öppnas" : "";
   const t = (teaser && String(teaser).trim().length) ? teaser : card.title;
 
   return `
@@ -133,7 +138,6 @@ function closedInnerHtml(card, state, teaser) {
       ${stateIconHtml(state)}
       <h2 class="teaserTitle">${escapeHtml(t)}</h2>
     </div>
-    ${label ? `<div class="meta">${label}</div>` : ``}
   `;
 }
 
@@ -162,7 +166,7 @@ function render() {
   // cards
   const cards = Array.isArray(model.cards) ? model.cards : [];
   // sort: tidigast unlock först (eller byt till senaste först om du vill)
-  cards.sort((a, b) => new Date(a.unlockAt).getTime() - new Date(b.unlockAt).getTime());
+  cards.sort((a, b) => new Date(b.unlockAt).getTime() - new Date(a.unlockAt).getTime());
 
   els.grid.innerHTML = "";
   for (const c of cards) {
@@ -185,7 +189,7 @@ function render() {
         <div class="stateBadge ${state}">
                 ${
                     state === "unlockable"
-                        ? `<button class="openBtn openBtnSmall" type="button">Öppna</button>`
+                        ? `<button class="openBtn" type="button">ÖPPNA</button>`
                         : `<span class="dateText">${escapeHtml(unlockLabel)}</span>`
                 }
         </div>
@@ -215,17 +219,24 @@ function render() {
         openedSet.add(c.id);
         writeOpenedSet(openedSet);
 
-        // animera "open" direkt utan full rerender
+        // Starta sömlös övergång
         el.classList.remove("unlockable");
-        el.classList.add("open");
+        el.classList.add("opening", "open"); // open triggar dörr-rotationen
 
+        const badge = el.querySelector(".stateBadge");
+        const inner = el.querySelector(".inner");
+
+        // Ta bort badgen efter att den hunnit fade:a ut
+        if (badge) setTimeout(() => badge.remove(), 280);
+
+        // Byt innehåll nära slutet av dörr-anim (din door = 900ms)
         setTimeout(() => {
-            const badge = el.querySelector(".stateBadge");
-            if (badge) badge.remove();
-
-            const inner = el.querySelector(".inner");
             if (inner) inner.innerHTML = openInnerHtml(c);
-        }, 450);
+
+            el.classList.remove("opening");
+            el.classList.add("justOpened");
+            setTimeout(() => el.classList.remove("justOpened"), 450);
+        }, 720);
 
         burstConfetti(el);
       }
@@ -257,44 +268,220 @@ function refreshCardStates(force = false) {
   });
 }
 
+// Canvas-baserad confetti med enkel fysik (realistisk spridning + fall)
+const confettiEngine = (() => {
+  let canvas = null;
+  let ctx = null;
+  let dpr = 1;
+  let w = 0, h = 0;
+
+  let particles = [];
+  let rafId = null;
+  let lastT = 0;
+  let running = false;
+
+  // Tweak här om du vill:
+  const GRAVITY = 1200;     // px/s^2
+  const AIR_DRAG = 0.985;   // per frame-ish
+  const WIND_STRENGTH = 120; // px/s^2
+  const MAX_LIFE = 2.6;     // sek
+
+  function ensureCanvas() {
+    if (canvas && ctx) return;
+
+    canvas = document.createElement("canvas");
+    canvas.className = "confettiCanvas";
+    els.confettiHost.appendChild(canvas);
+
+    ctx = canvas.getContext("2d", { alpha: true });
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+  }
+
+  function resize() {
+    if (!canvas) return;
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    w = window.innerWidth;
+    h = window.innerHeight;
+
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function wind(t, y) {
+    // mjuk vind som varierar i tid + lite beroende på höjd
+    return (
+      Math.sin(t * 0.8) * WIND_STRENGTH +
+      Math.sin((t * 1.7) + y * 0.004) * (WIND_STRENGTH * 0.6)
+    );
+  }
+
+  function rand(min, max) { return min + Math.random() * (max - min); }
+
+  function makeParticle(x, y) {
+    const typeRoll = Math.random();
+    const type = typeRoll < 0.18 ? "circle" : typeRoll < 0.35 ? "ribbon" : "rect";
+
+    let pw = rand(6, 12);
+    let ph = rand(10, 18);
+    if (type === "circle") { ph = pw; }
+    if (type === "ribbon") { pw = rand(4, 7); ph = rand(18, 34); }
+
+    // Större spridning: bredare vinkel + högre initial fart
+    const angle = rand((-Math.PI / 2) - 1.1, (-Math.PI / 2) + 1.1); // uppåt med stor sid-spridning
+    const speed = rand(650, 1250);
+
+    const hue = Math.floor(rand(0, 360));
+    const colorA = `hsla(${hue}, 95%, 65%, 0.95)`;
+    const colorB = `hsla(${(hue + rand(20, 70)) % 360}, 95%, 60%, 0.95)`;
+
+    return {
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      ax: 0,
+      ay: GRAVITY,
+
+      w: pw,
+      h: ph,
+      type,
+
+      // rotation + “flip” för realistiskt tumlande
+      angle: rand(0, Math.PI * 2),
+      spin: rand(-10, 10),          // rad/s
+      flip: rand(0, Math.PI * 2),
+      flipSpeed: rand(8, 18),       // rad/s
+
+      // färg (vi simulerar framsida/baksida via flip)
+      c1: colorA,
+      c2: colorB,
+
+      life: 0,
+      maxLife: rand(1.6, MAX_LIFE)
+    };
+  }
+
+  function drawParticle(p, t) {
+    // flip: 0..1 (hur "tunn" den ser ut när den roterar)
+    const flipVal = Math.sin(p.flip + t * p.flipSpeed);
+    const thin = Math.abs(flipVal);            // 0..1
+    const face = flipVal >= 0 ? p.c1 : p.c2;   // byt “sida”
+
+    // lite fade mot slutet
+    const remaining = Math.max(0, 1 - (p.life / p.maxLife));
+    const alpha = remaining * (0.35 + 0.65 * (0.25 + 0.75 * thin));
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.angle);
+
+    // skala i “tjocklek” för tumbling-känsla
+    ctx.scale(1, 0.25 + 0.75 * thin);
+
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = face;
+
+    if (p.type === "circle") {
+      ctx.beginPath();
+      ctx.arc(0, 0, p.w * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // rectangle / ribbon
+      ctx.fillRect(-p.w * 0.5, -p.h * 0.5, p.w, p.h);
+    }
+
+    ctx.restore();
+  }
+
+  function step(ts) {
+    if (!running) return;
+
+    const t = ts / 1000;
+    const dt = Math.min(0.033, lastT ? (t - lastT) : 0.016);
+    lastT = t;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // uppdatera + rita
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.life += dt;
+
+      // vind påverkar ax, lite mer när den “fladdrar” (thin)
+      const thin = Math.abs(Math.sin(p.flip + t * p.flipSpeed));
+      const wx = wind(t, p.y) * (0.6 + 0.8 * thin);
+
+      p.ax = wx;
+
+      // integrera
+      p.vx += p.ax * dt;
+      p.vy += p.ay * dt;
+
+      // luftmotstånd
+      p.vx *= Math.pow(AIR_DRAG, dt * 60);
+      p.vy *= Math.pow(AIR_DRAG, dt * 60);
+
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+
+      // rotation
+      p.angle += p.spin * dt;
+
+      // döda om den är “klar” eller långt utanför
+      if (p.life > p.maxLife || p.y > h + 120 || p.x < -200 || p.x > w + 200) {
+        particles.splice(i, 1);
+        continue;
+      }
+
+      drawParticle(p, t);
+    }
+
+    if (particles.length === 0) {
+      running = false;
+      rafId = null;
+      return;
+    }
+
+    rafId = requestAnimationFrame(step);
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    lastT = 0;
+    rafId = requestAnimationFrame(step);
+  }
+
+  function burst(x, y, amount = 110) {
+    ensureCanvas();
+
+    for (let i = 0; i < amount; i++) {
+      // sprid startpunkten lite så det inte ser “perfekt”
+      particles.push(makeParticle(
+        x + rand(-18, 18),
+        y + rand(-12, 12)
+      ));
+    }
+
+    start();
+  }
+
+  return { burst };
+})();
+
 function burstConfetti(cardEl) {
   const rect = cardEl.getBoundingClientRect();
   const originX = rect.left + rect.width * 0.5;
-  const originY = rect.top + rect.height * 0.25;
+  const originY = rect.top + rect.height * 0.28;
 
-  const count = 42;
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement("div");
-    p.className = "confetti";
-
-    // position
-    const spread = 180;
-    const x = originX + (Math.random() - 0.5) * spread;
-    const y = originY + (Math.random() - 0.5) * 40;
-
-    p.style.left = `${x}px`;
-    p.style.top = `${y}px`;
-
-    // size variation
-    const w = 6 + Math.random() * 10;
-    const h = 10 + Math.random() * 14;
-    p.style.width = `${w}px`;
-    p.style.height = `${h}px`;
-
-    // random color-ish using gradients already present in page
-    const hue = Math.floor(160 + Math.random() * 160);
-    p.style.background = `hsla(${hue}, 90%, 70%, 0.95)`;
-
-    // stagger + drift
-    const delay = Math.random() * 120;
-    const dur = 950 + Math.random() * 650;
-    p.style.animationDelay = `${delay}ms`;
-    p.style.animationDuration = `${dur}ms`;
-
-    els.confettiHost.appendChild(p);
-
-    setTimeout(() => p.remove(), dur + delay + 50);
-  }
+  // flera vågor = mer energi + “spridning”
+  confettiEngine.burst(originX, originY, 90);
+  setTimeout(() => confettiEngine.burst(originX, originY, 70), 90);
+  setTimeout(() => confettiEngine.burst(originX, originY, 55), 180);
 }
 
 async function loadContent({ bustCache = false } = {}) {

@@ -83,6 +83,17 @@ body{
   color: #F88180;
 }
 
+.titleSub{
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 0.62em;          /* liten */
+  font-style: italic;         /* kursiv */
+  font-weight: 500;           /* subtil men läsbar */
+  opacity: 0.72;              /* subtil */
+  color: var(--accent);
+  vertical-align: baseline;
+}
+
 .countdownRegion{
   padding: 12px 16px 0;
 }
@@ -372,17 +383,10 @@ body{
 }
 
 .openBtn{
-  margin-top: 10px;
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(185,244,255,0.35);
-  background: rgba(185,244,255,0.10);
-  color: var(--text);
-  cursor:pointer;
-}
-.openBtn:hover{
-  background: rgba(185,244,255,0.14);
+  background: transparent;
+  border: transparent;
+  color: var(--accent2);
 }
 
 /* Open state */
@@ -412,21 +416,41 @@ body{
   z-index: 999;
 }
 
-.confetti{
-  position:absolute;
-  top: -10px;
-  width: 10px;
-  height: 14px;
-  border-radius: 2px;
-  opacity: 0.95;
-  transform: translateY(-20px) rotate(0deg);
-  animation: fall 1200ms linear forwards;
+.confettiCanvas{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-@keyframes fall{
-  to{
-    transform: translateY(110vh) rotate(540deg);
-    opacity: 0.2;
+/* Confetti */
+.confetti{
+  position: absolute;
+  border-radius: 2px;
+  opacity: 1;
+  will-change: transform, opacity;
+  transform: translate(0,0) rotate(0deg);
+  animation: confetti-pop var(--dur, 1400ms) cubic-bezier(.12,.8,.2,1) forwards;
+  animation-delay: var(--delay, 0ms);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+}
+
+.confetti.round{ border-radius: 999px; }
+.confetti.ribbon{ border-radius: 999px; }
+
+@keyframes confetti-pop{
+  0%{
+    transform: translate(0,0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  25%{
+    /* liten “uppkast”-fas */
+    transform: translate(calc(var(--dx) * 0.35), var(--up)) rotate(calc(var(--rot) * 0.35)) scale(1);
+    opacity: 1;
+  }
+  100%{
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.9);
+    opacity: 0;
   }
 }
 
@@ -439,10 +463,11 @@ body{
   color: rgba(255,255,255,0.92);
 }
 
-/* Ge plats för badge + knapp så rubriken inte hamnar bakom */
-.card.locked .inner,
+.card.locked .inner{
+  padding-bottom: 65px;   /* mindre -> datumet kommer närmare rubriken */
+}
 .card.unlockable .inner{
-  padding-bottom: 78px;
+  padding-bottom: 65px;   /* större -> plats för Öppna-knapp */
 }
 
 .stateBadge{
@@ -478,45 +503,40 @@ body{
   color: var(--accent2);
 }
 
-/* mindre knapp */
-.openBtnSmall{
-  padding: 6px 9px;
-  font-size: 12px;
-  border-radius: 10px;
-}
-
-/* Öppet kort: header */
-.cardHeader{
+/* Öppet kort: rubrikrad som matchar övriga kort */
+.openHeader{
   display:flex;
   align-items:center;
-  gap: 10px;
+  justify-content:center; /* likt closedHeader */
+  gap:10px;
   margin-bottom: 10px;
+  text-align:center;
 }
 
-.headerIcon{
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.06);
+.openTitle{
+  margin:0;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.15;
+  color: var(--accent2);
 }
 
-.openedTag{
-  font-size: 11px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.75);
-  white-space: nowrap;
+/* Valfri innehållsbild i öppet kort */
+.openMedia{
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius: 14px;
+  border: 1px solid rgba(var(--accent2-rgb),0.25);
+  margin-bottom: 10px;
 }
 
 .cardText{
   margin: 0;
-  font-size: 14px;
-  line-height: 1.35;
-  color: rgba(255,255,255,0.86);
+  font-size: 16px;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--acc);
 }
 
 /* Ikoner i badge (låst/redo) */
@@ -530,17 +550,6 @@ body{
   display: block;
 }
 
-/* Header-ikon när kortet är öppet */
-.headerIcon{
-  width: 26px;
-  height: 26px;
-  max-width: 26px;
-  max-height: 26px;
-  object-fit: contain;
-  flex: 0 0 26px;
-  display: block;
-}
-
 /* Endast innehållsbilden i öppet kort ska få ram */
 .card.open .inner > img{
   width:100%;
@@ -551,12 +560,115 @@ body{
 
 .closedHeader{
   display:flex;
-  align-items:center;
+  align-items:center;        /* vertikalt centrerad */
+  justify-content:center;    /* centrerar gruppen i kortet */
   gap:10px;
+  text-align:center;
 }
 
 .closedHeader .stateIcon{
-  width:30px;
-  height:30px;
-  flex:0 0 auto;
+  flex:0 0 30px;
+}
+
+.closedHeader .teaserTitle{
+  margin:0;                  /* så rubriken inte “drar” upp/ned */
+}
+
+/* SÖMLÖS ÖPPNING */
+.card .inner{
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.stateBadge{
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.card.opening{
+  pointer-events: none; /* förhindrar dubbelklick under öppning */
+}
+
+.card.opening .inner{
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.card.opening .stateBadge{
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes revealIn{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.card.justOpened .inner{
+  animation: revealIn 420ms ease both;
+}
+
+.card.locked,
+.card.unlockable,
+.card.opening{
+  border-color: var(--accent2);
+}
+
+/* Öppet kort: ikon alltid vänster, titel visuellt centrerad */
+.cardHeader.openHeader{
+  display: grid;
+  grid-template-columns: 34px 1fr 34px; /* höger “spacer” för perfekt centrering */
+  align-items: center;
+  column-gap: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* spacer-kolumnen */
+.cardHeader.openHeader::after{
+  content: "";
+  width: 34px;
+  height: 34px;
+}
+
+/* FIX: låt aldrig själva ikon-bilden få border-radius/border/background */
+.headerIcon,
+.headerIconImg{
+  border-radius: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Badge/wrapper runt ikonen */
+.headerIconWrap{
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;                /* mer luft => inget klipps visuellt */
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  box-sizing: border-box;
+  overflow: visible;           /* säkerhetsbälte */
+}
+
+/* Själva bilden: gör den lite mindre än wrappern */
+.headerIconImg{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* ÖPPNAT kort: beskrivningstexten under bilden */
+.card.open .cardText{
+  color: white; /* ny färg */
+  font-weight: 700;      /* bold */
+  font-size: 16px;       /* något större */
+  line-height: 1.45;
+  text-align: center;
+
+  /* välj en annan font (exempel) */
+  font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
