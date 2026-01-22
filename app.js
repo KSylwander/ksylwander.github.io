@@ -484,15 +484,22 @@ function burstConfetti(cardEl) {
   setTimeout(() => confettiEngine.burst(originX, originY, 55), 180);
 }
 
-async function loadContent({ bustCache = false } = {}) {
+async function loadContent({ bustCache = true } = {}) {
   try {
-    // setStatus("Hämtar…");
-    const url = bustCache ? `${CONTENT_URL}?t=${Date.now()}` : CONTENT_URL;
-    const res = await fetch(url, { cache: "no-store" });
+    const sep = CONTENT_URL.includes("?") ? "&" : "?";
+    const url = bustCache ? `${CONTENT_URL}${sep}t=${Date.now()}` : CONTENT_URL;
+
+    const res = await fetch(url, {
+      cache: "reload", // starkare än no-store i vissa WebKit-lägen
+      headers: {
+        "cache-control": "no-cache",
+        "pragma": "no-cache"
+      }
+    });
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     model = await res.json();
 
-    // setStatus(`Senast uppdaterad: ${new Date().toLocaleString("sv-SE")}`);
     render();
 
     if (timerInterval) clearInterval(timerInterval);
