@@ -16,6 +16,21 @@ const els = {
 let model = null;
 let timerInterval = null;
 
+// iOS WebClip (standalone) kan cachea HTML/JS aggressivt.
+// Detta tvingar en "ny" URL per session så dokumentet hämtas på nytt.
+(function bustStandaloneDocCacheOncePerSession() {
+  const isStandalone = window.navigator.standalone === true;
+  if (!isStandalone) return;
+
+  const KEY = "standaloneDocBust:v1";
+  if (sessionStorage.getItem(KEY)) return;
+
+  sessionStorage.setItem(KEY, "1");
+  const u = new URL(window.location.href);
+  u.searchParams.set("v", String(Date.now()));
+  window.location.replace(u.toString());
+})();
+
 function readOpenedSet() {
   try {
     const raw = localStorage.getItem(OPENED_KEY);
