@@ -15,8 +15,8 @@ const els = {
 
 let model = null;
 let timerInterval = null;
-
-console.log("BUILD", "2026-01-22-1");
+let contentLoadSeq = 0;
+let contentAbort = null;
 
 // iOS WebClip (standalone) kan cachea HTML/JS aggressivt.
 // Detta tvingar en "ny" URL per session så dokumentet hämtas på nytt.
@@ -521,44 +521,70 @@ function burstConfetti(cardEl) {
 }
 
 async function loadContent({ bustCache = true } = {}) {
+  const seq = ++contentLoadSeq;
+
   try {
-    // Bas: absolut URL till content.json baserat på aktuell sida
-    const base = new URL(".", window.location.href); // katalogen där index.html ligger
-    const contentUrl = new URL(CONTENT_URL, base);
+    // Avbryt ev pågående fetch (så gammal aldrig kan vinna)
+    if (contentAbort) contentAbort.abort();
+    contentAbort = new AbortController();
 
-    // Cache-bust
-    if (bustCache) contentUrl.searchParams.set("t", String(Date.now()));
+    // Absolut URL (tar bort alla “relativ path”-edgecases i standalone)
+    const base = new URL(".", window.location.href);
+    const u = new URL(CONTENT_URL, base);
 
-    // Försök #1
-    let res = await fetch(contentUrl.toString(), {
-      cache: "no-store",
-      headers: { "cache-control": "no-cache", "pragma": "no-cache" }
+    if (bustCache) u.searchParams.set("t", String(Date.now()));
+
+    const res = await fetch(u.toString(), {
+      cache: "reload",
+      headers: { "cache-control": "no-cache", "pragma": "no-cache" },
+      signal: contentAbort.signal
     });
 
-    // Försök #2 (om WebClip beter sig konstigt)
-    if (!res.ok && bustCache) {
-      contentUrl.searchParams.set("t", String(Date.now() + 1));
-      res = await fetch(contentUrl.toString(), {
-        cache: "reload",
-        headers: { "cache-control": "no-cache", "pragma": "no-cache" }
-      });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const nextModel = await res.json();
+
+    // Om en nyare load har startat efter denna → ignorera
+    if (seq !== contentLoadSeq) return;
+
+    model = nextModel;
+
+    // Render kan också kasta (då vill vi se felet tydligt)
+    try {
+      render();
+    } catch (err) {
+      console.error("render() failed:", err);
+      setStatus(`Render-fel: ${String(err?.message || err)}`);
+      return;
     }
 
-    if (!res.ok) throw new Error(`content fetch failed: ${res.status} ${res.statusText}`);
-
-    model = await res.json();
-    render();
+    // Tydlig indikator att refresh faktiskt “tog”
+    setStatus(`Content laddad: ${new Date().toLocaleTimeString("sv-SE")}`);
 
     if (timerInterval) clearInterval(timerInterval);
     updateCountdown();
     timerInterval = setInterval(updateCountdown, 1000);
 
   } catch (e) {
-    console.error(e);
-    setStatus(`Kunde inte hämta content.json: ${String(e.message || e)}`);
+    if (e.name === "AbortError") return;
+    console.error("loadContent failed:", e);
+    setStatus(`Kunde inte hämta content: ${String(e?.message || e)}`);
   }
 }
 
 els.refreshBtn.addEventListener("click", () => loadContent({ bustCache: true }));
 
-loadContent();
+// iOS standalone återställer ofta sidan från BFCache/snapshot.
+// Då måste vi aktivt trigga omhämtning när sidan “kommer tillbaka”.
+window.addEventListener("pageshow", (e) => {
+  // e.persisted = true betyder BFCache restore
+  if (e.persisted) loadContent({ bustCache: true });
+});
+
+// När appen blir aktiv igen (t.ex. efter att ha varit i bakgrunden)
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    loadContent({ bustCache: true });
+  }
+});
+
+loadContent({ bustCache: true });
