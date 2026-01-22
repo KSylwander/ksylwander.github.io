@@ -16,6 +16,8 @@ const els = {
 let model = null;
 let timerInterval = null;
 
+console.log("BUILD", "2026-01-22-1");
+
 // iOS WebClip (standalone) kan cachea HTML/JS aggressivt.
 // Detta tvingar en "ny" URL per session så dokumentet hämtas på nytt.
 (function bustStandaloneDocCacheOncePerSession() {
