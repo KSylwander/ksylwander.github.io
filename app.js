@@ -11,7 +11,8 @@ const els = {
   dd: document.getElementById("dd"),
   hh: document.getElementById("hh"),
   mm: document.getElementById("mm"),
-  confettiHost: document.getElementById("confettiHost")
+  confettiHost: document.getElementById("confettiHost"),
+  versionTag: document.getElementById("versionTag")
 };
 
 let model = null;
@@ -67,11 +68,15 @@ function writeOpenedSet(set) {
   localStorage.setItem(OPENED_KEY, JSON.stringify([...set]));
 }
 
-function markCardOpened(cardId) {
+function markCardOpened(cardId, { rerender = true } = {}) {
   const opened = readOpenedSet();
   opened.add(String(cardId));
-  writeOpenedSet(opened);
-  render();
+
+  const ok = writeOpenedSet(opened);
+  if (!ok) return false;
+
+  if (rerender) render();
+  return true;
 }
 
 function setStatus(msg) {
@@ -266,7 +271,8 @@ function render() {
       }
 
       if (st === "unlockable") {
-        markCardOpened(c.id);
+        // Spara öppnat-läge utan att re-rendera hela listan (annars tappar vi referensen till klickat kort)
+        markCardOpened(c.id, { rerender: false });
 
         // Starta sömlös övergång
         el.classList.remove("unlockable");
@@ -545,6 +551,10 @@ async function loadContent({ bustCache = true } = {}) {
     const prevVer = localStorage.getItem(CONTENT_VERSION_KEY);
     const nextVer = String(next?.version || "");
 
+    if (els.versionTag) {
+      els.versionTag.textContent = nextVer ? `${nextVer}` : "";
+    }
+
     if (nextVer && nextVer !== prevVer) {
       localStorage.setItem(CONTENT_VERSION_KEY, nextVer);
     }
@@ -552,7 +562,7 @@ async function loadContent({ bustCache = true } = {}) {
     model = next;
 
     // Bra indikator på att render kör på nya datan
-    setStatus(`Laddad ${new Date().toLocaleTimeString("sv-SE")} · v=${nextVer || "?"}`);
+    // setStatus(`Laddad ${new Date().toLocaleTimeString("sv-SE")} · v=i${nextVer || "?"}`);
 
     render();
 

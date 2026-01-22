@@ -1,5 +1,5 @@
 {
-  "version": "2026-01-22-10",
+  "version": "1.0.2",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -9,40 +9,19 @@
         "icons": {
             "locked": "img/locked.png",
             "unlockable": "img/unlockable.png",
-            "openedHeader": "img/icons/calendar.png"
+            "openedHeader": "img/calendar.png"
         }
     }
   },
   "cards": [
     {
-      "id": "card-28",
-      "title": "Kort 3…",
+      "id": "card-001",
+      "title": "Mission: Juni 🕵️‍♀️",
       "headerIcon": "img/calendar.png",
-      "image": "img/lodge.jpg",
-      "imageAlt": "En stuga i fjällen",
-      "text": "Här är hela texten som syns när kortet är öppnat. Nu ska vi se hur mycket text vi kan ha här. Vi behöver ändå få plats med en hel del tycker jag, det är därför jag skriver så mycket här. Minst 500 tecken är tanken iaf, eller åtminstonde 300. NU ska vi se hur detta ser ut, eller hur!?",
-      "unlockAt": "2026-01-21T00:00:00+01:00",
-      "preview": { "teaser": "Något fint väntar bakom låset…" }
-    },
-    {
-      "id": "card-27",
-      "title": "Kort 1…",
-      "headerIcon": "img/calendar.png",
-      "image": "img/lodge.jpg",
-      "imageAlt": "En stuga i fjällen",
-      "text": "Här är hela texten som syns när kortet är öppnat. Nu ska vi se hur mycket text vi kan ha här. Vi behöver ändå få plats med en hel del tycker jag, det är därför jag skriver så mycket här. Minst 500 tecken är tanken iaf, eller åtminstonde 300. NU ska vi se hur detta ser ut, eller hur!?",
-      "unlockAt": "2026-01-20T00:00:00+01:00",
-      "preview": { "teaser": "Något fint väntar bakom låset…" }
-    },
-    {
-      "id": "card-26",
-      "title": "Kort 2",
-      "headerIcon": "img/calendar.png",
-      "image": "img/lodge.jpg",
-      "text": "Här är hela texten som syns när kortet är öppnat.",
-      "unlockAt": "2026-01-21T00:00:00+01:00",
+      "text": "Älskling - Du har ett uppdrag, ta reda på om du kan vara ledig 15-18 Juni, eller 22-24 Juni.",
+      "unlockAt": "2026-01-25T00:00:00+01:00",
       "preview": {
-        "teaser": "Något fint väntar bakom låset 2…"
+        "teaser": "Ett hemligt uppdrag väntar"
       }
     }
   ]
