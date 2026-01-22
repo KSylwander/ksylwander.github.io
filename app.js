@@ -522,20 +522,31 @@ function burstConfetti(cardEl) {
 
 async function loadContent({ bustCache = true } = {}) {
   try {
-    const sep = CONTENT_URL.includes("?") ? "&" : "?";
-    const url = bustCache ? `${CONTENT_URL}${sep}t=${Date.now()}` : CONTENT_URL;
+    // Bas: absolut URL till content.json baserat på aktuell sida
+    const base = new URL(".", window.location.href); // katalogen där index.html ligger
+    const contentUrl = new URL(CONTENT_URL, base);
 
-    const res = await fetch(url, {
-      cache: "reload", // starkare än no-store i vissa WebKit-lägen
-      headers: {
-        "cache-control": "no-cache",
-        "pragma": "no-cache"
-      }
+    // Cache-bust
+    if (bustCache) contentUrl.searchParams.set("t", String(Date.now()));
+
+    // Försök #1
+    let res = await fetch(contentUrl.toString(), {
+      cache: "no-store",
+      headers: { "cache-control": "no-cache", "pragma": "no-cache" }
     });
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    model = await res.json();
+    // Försök #2 (om WebClip beter sig konstigt)
+    if (!res.ok && bustCache) {
+      contentUrl.searchParams.set("t", String(Date.now() + 1));
+      res = await fetch(contentUrl.toString(), {
+        cache: "reload",
+        headers: { "cache-control": "no-cache", "pragma": "no-cache" }
+      });
+    }
 
+    if (!res.ok) throw new Error(`content fetch failed: ${res.status} ${res.statusText}`);
+
+    model = await res.json();
     render();
 
     if (timerInterval) clearInterval(timerInterval);
@@ -544,7 +555,7 @@ async function loadContent({ bustCache = true } = {}) {
 
   } catch (e) {
     console.error(e);
-    setStatus("Kunde inte hämta content. Kontakt supporten för böveln!.");
+    setStatus(`Kunde inte hämta content.json: ${String(e.message || e)}`);
   }
 }
 
