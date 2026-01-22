@@ -1,5 +1,5 @@
 {
-  "version": "2026-01-22-05",
+  "version": "2026-01-22-06",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -21,7 +21,7 @@
       "image": "img/lodge.jpg",
       "imageAlt": "En stuga i fjällen",
       "text": "Här är hela texten som syns när kortet är öppnat. Nu ska vi se hur mycket text vi kan ha här. Vi behöver ändå få plats med en hel del tycker jag, det är därför jag skriver så mycket här. Minst 500 tecken är tanken iaf, eller åtminstonde 300. NU ska vi se hur detta ser ut, eller hur!?",
-      "unlockAt": "2026-02-20T00:00:00+01:00",
+      "unlockAt": "2026-01-20T00:00:00+01:00",
       "preview": { "teaser": "Något fint väntar bakom låset…" }
     },
     {
@@ -30,7 +30,7 @@
       "headerIcon": "img/calendar.png",
       "image": "img/lodge.jpg",
       "text": "Här är hela texten som syns när kortet är öppnat.",
-      "unlockAt": "2026-02-21T00:00:00+01:00",
+      "unlockAt": "2026-01-21T00:00:00+01:00",
       "preview": {
         "teaser": "Något fint väntar bakom låset 2…"
       }
