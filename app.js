@@ -57,13 +57,21 @@ function readOpenedSet() {
   try {
     const raw = localStorage.getItem(OPENED_KEY);
     const arr = raw ? JSON.parse(raw) : [];
-    return new Set(Array.isArray(arr) ? arr : []);
+    return new Set((Array.isArray(arr) ? arr : []).map(v => String(v)));
   } catch {
     return new Set();
   }
 }
+
 function writeOpenedSet(set) {
   localStorage.setItem(OPENED_KEY, JSON.stringify([...set]));
+}
+
+function markCardOpened(cardId) {
+  const opened = readOpenedSet();
+  opened.add(String(cardId));
+  writeOpenedSet(opened);
+  render();
 }
 
 function setStatus(msg) {
@@ -108,7 +116,7 @@ function updateCountdown() {
 function cardState(card, openedSet) {
   const now = Date.now();
   const unlockAt = new Date(card.unlockAt).getTime();
-  const isOpen = openedSet.has(card.id);
+  const isOpen = openedSet.has(String(card.id));
 
   if (isOpen) return "open";
   if (now >= unlockAt) return "unlockable";
@@ -258,8 +266,7 @@ function render() {
       }
 
       if (st === "unlockable") {
-        openedSet.add(c.id);
-        writeOpenedSet(openedSet);
+        markCardOpened(c.id);
 
         // Starta sömlös övergång
         el.classList.remove("unlockable");
@@ -540,7 +547,6 @@ async function loadContent({ bustCache = true } = {}) {
 
     if (nextVer && nextVer !== prevVer) {
       localStorage.setItem(CONTENT_VERSION_KEY, nextVer);
-      localStorage.removeItem(OPENED_KEY); // resetta öppnade kort så UI matchar nya content
     }
 
     model = next;
