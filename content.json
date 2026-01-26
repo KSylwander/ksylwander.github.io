@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,16 @@
     }
   },
   "cards": [
+    {
+      "id": "card-003",
+      "title": "Vilket är ditt val? 📞",
+      "headerIcon": "img/done.png",
+      "text": "Älskling - Det är dags att meddela ditt val. Är det möjligen ledigt 15-18 Juni, eller 22-24 Juni. Gör dit val formellt genom att skicka informationen till 073-7085775.",
+      "unlockAt": "2026-01-30T00:00:00+01:00",
+      "preview": {
+        "teaser": "Mission Accomplished?"
+      }
+    },
     {
       "id": "card-002",
       "title": "Mission: Juni 🕵️‍♀️",
