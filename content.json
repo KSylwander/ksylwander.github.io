@@ -1,5 +1,5 @@
 {
-  "version": "1.0.5",
+  "version": "1.0.7",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,27 @@
     }
   },
   "cards": [
+    {
+      "id": "card-006",
+      "title": "❤️ Alla hjärtans dag och du är ett av mina ❤️",
+      "headerIcon": "img/heart.png",
+      "unlockAt": "2026-02-14T00:00:00+01:00",
+      "text": "Älskling! Det finns något litet i brevlådan... wiiiii så kul!",
+      "preview": {
+        "teaser": "❤️ Alla hjärtans dag special ❤️"
+      }
+    },
+    {
+      "id": "card-005",
+      "title": "Platsen är bekräftad 📍",
+      "headerIcon": "img/location.png",
+      "image": "img/blurry_loc.jpg",
+      "text": "Jag tänkte visa dig platsen redan nu...men, det är fortfarande strul med tekniken. I alla fall, här kommer vi nog troligtvis att gå.",
+      "unlockAt": "2026-02-13T00:00:00+01:00",
+      "preview": {
+        "teaser": "Ibland ser man mer genom att se mindre!"
+      }
+    },
     {
       "id": "card-004",
       "title": "Tack! 🙏",
