@@ -1,5 +1,5 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,16 @@
     }
   },
   "cards": [
+    {
+      "id": "card-007",
+      "title": "Inget projektlederi nödvändigt",
+      "headerIcon": "img/crown.png",
+      "unlockAt": "2026-02-20T00:00:00+01:00",
+      "text": "Älskling! Ta det lugnt, allt är redan fixat. Du behöver inte vara projektledare och dra i trådarna denna gången. Drottningen i huset vi alla älskar kan sitta lugnt i sin stol.",
+      "preview": {
+        "teaser": "Den lata projektledaren"
+      }
+    },
     {
       "id": "card-006",
       "title": "❤️ Alla hjärtans dag och du är ett av mina ❤️",
