@@ -1,5 +1,5 @@
 {
-  "version": "1.0.8",
+  "version": "1.0.9",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,17 @@
     }
   },
   "cards": [
+    {
+      "id": "card-008",
+      "title": "Fel Pernilla!",
+      "headerIcon": "img/crown.png",
+      "unlockAt": "2026-02-27T00:00:00+01:00",
+      "image": "img/pernilla.png",
+      "text": "Älskling! Tekniken är fortsatt inte med oss dessvärre. Det är inte tjejen på bilden som brevet är skrivit till. Men från en schlagerdrottning till en annan, det kommer bli kul!",
+      "preview": {
+        "teaser": "Schlagerdrottning"
+      }
+    },
     {
       "id": "card-007",
       "title": "Inget projektlederi nödvändigt",
