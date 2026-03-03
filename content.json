@@ -1,5 +1,5 @@
 {
-  "version": "1.0.9",
+  "version": "1.0.10",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,16 @@
     }
   },
   "cards": [
+    {
+      "id": "card-009",
+      "title": "Packningspolicy",
+      "headerIcon": "img/suitcase.png",
+      "unlockAt": "2026-03-06T00:00:00+01:00",
+      "text": "Älskling! Det är inte riktigt dags för att bestämma packningen ännu. Men när det väl händer kommer jag att hålla ett öga på dig!👀",
+      "preview": {
+        "teaser": "Det är inte dags än"
+      }
+    },
     {
       "id": "card-008",
       "title": "Fel Pernilla!",
