@@ -1,5 +1,5 @@
 {
-  "version": "1.0.10",
+  "version": "1.0.11",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,16 @@
     }
   },
   "cards": [
+    {
+      "id": "card-010",
+      "title": "",
+      "headerIcon": "img/location.png",
+      "unlockAt": "2026-03-15T00:00:00+01:00",
+      "text": "🕵️‍♀️ Älskling! Tekniken till trots, så finns det ännu information som kan leda dig till rätt destination med dess fem ringar. Det är inte lätt, och det funkar inte att bara name-droppa på måfå. Nej, du behöver allt koppla dom till den aktuella platsen. När du väl gjort detta, kan du få ett besked. Lycka till! 🕵️‍♀️",
+      "preview": {
+        "teaser": "Vad kan detta leda..."
+      }
+    }, 
     {
       "id": "card-009",
       "title": "Packningspolicy",
