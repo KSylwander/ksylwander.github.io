@@ -1,5 +1,5 @@
 {
-  "version": "1.0.12",
+  "version": "1.0.13",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -15,8 +15,18 @@
   },
   "cards": [
     {
+      "id": "card-012",
+      "title": "Upplevelser",
+      "headerIcon": "img/shoe.png",
+      "unlockAt": "2026-04-27T00:00:00+01:00",
+      "text": "❤️ Älskling, ibland är det inte målet utan upplevelsen i sig som bär dagen. Vi ska ta del av något med både fart, fantasi och närvaro. Glöm inte skodonen.",
+      "preview": {
+        "teaser": "Va, skor igen!"
+      }
+    }, 
+    {
       "id": "card-011",
-      "title": "",
+      "title": "Promenadstråk",
       "headerIcon": "img/heart.png",
       "unlockAt": "2026-03-27T00:00:00+01:00",
       "text": "❤️ Älskling, det är inte dags att packa ännu. Men när det väl är det ska du välja skor som gillar att promenera. Blir en del strosande på diverse olika underlag och platser. Både stora och små fötter.❤️",
@@ -26,7 +36,7 @@
     }, 
     {
       "id": "card-010",
-      "title": "",
+      "title": "Information",
       "headerIcon": "img/location.png",
       "unlockAt": "2026-03-15T00:00:00+01:00",
       "text": "🕵️‍♀️ Älskling! Tekniken till trots, så finns det ännu information som kan leda dig till rätt destination med dess fem ringar. Det är inte lätt, och det funkar inte att bara name-droppa på måfå. Nej, du behöver allt koppla dom till den aktuella platsen. När du väl gjort detta, kan du få ett besked. Lycka till! 🕵️‍♀️",
