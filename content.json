@@ -1,5 +1,5 @@
 {
-  "version": "1.0.13",
+  "version": "1.0.14",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -18,7 +18,7 @@
       "id": "card-012",
       "title": "Upplevelser",
       "headerIcon": "img/shoe.png",
-      "unlockAt": "2026-04-27T00:00:00+01:00",
+      "unlockAt": "2026-04-12T00:00:00+01:00",
       "text": "❤️ Älskling, ibland är det inte målet utan upplevelsen i sig som bär dagen. Vi ska ta del av något med både fart, fantasi och närvaro. Glöm inte skodonen.",
       "preview": {
         "teaser": "Va, skor igen!"
