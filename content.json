@@ -1,5 +1,5 @@
 {
-  "version": "1.0.14",
+  "version": "1.0.15",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,17 @@
     }
   },
   "cards": [
+    {
+      "id": "card-013",
+      "title": "Nej det är ingen vanlig dag!",
+      "headerIcon": "img/heart.png",
+      "unlockAt": "2026-04-23T00:00:00+01:00",
+      "image": "img/wedding-10years.png",
+      "text": "❤️ Älskling! För idag har vi varit gifta i 10 år! Wow! Vilken resa det varit fram till nu! Tack för att du är den fantastiska tjej du är och är väldigt stolt över dig och din resa på alla plan. Älskar dig! Ta med dig Alicia till ICA Supermarket i Bunkan så ses vi där 18:25:ish! Puss Puss",
+      "preview": {
+        "teaser": "Är det en vanlig dag?"
+      }
+    },
     {
       "id": "card-012",
       "title": "Upplevelser",
