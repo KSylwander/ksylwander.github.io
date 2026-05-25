@@ -1,5 +1,5 @@
 {
-  "version": "1.0.15",
+  "version": "1.0.16",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,16 @@
     }
   },
   "cards": [
+    {
+      "id":"card-014",
+      "title": "Rörelse",
+      "headerIcon": "img/shoe.png",
+      "unlockAt": "2026-05-25T00:00:00+01:00",
+      "text": "❤️ Älskling, om du vill kan det vara värt att ta med löpardojorna också. Det kan finnas tillfälle för denna aktivitet också.",
+      "preview": {
+        "teaser": "Öhhh... dessa skor!"
+      }
+    },
     {
       "id": "card-013",
       "title": "Nej det är ingen vanlig dag!",
@@ -34,7 +44,7 @@
       "preview": {
         "teaser": "Va, skor igen!"
       }
-    }, 
+    },
     {
       "id": "card-011",
       "title": "Promenadstråk",
