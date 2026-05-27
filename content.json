@@ -1,5 +1,5 @@
 {
-  "version": "1.0.16",
+  "version": "1.0.18",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,16 @@
     }
   },
   "cards": [
+    {
+      "id":"card-015",
+      "title": "Kläder efter väder",
+      "headerIcon": "img/clothes.png",
+      "unlockAt": "2026-05-29T00:00:00+01:00",
+      "text": "❤️ Älskling, det är kläder efter väder som gäller 🌡️\n. Vi kommer att vara utomhus, promenerande, spankulerande nästan hela tiden 🚶‍♀️\n. Så kläder för regn och vind är bra att ta med för både dig och barnen\n. Din hardcore man kommer gå i shorts oavsett, det är ju sommar så det kommer inte att vara kallt 🥶\n. Aktivitetsmässigt så kommer det vara stor variation och finkläder är ett måste vid åtminstånde två tillfällen (äter ute alla kvällar)👗\n",
+      "preview": {
+        "teaser": "Vilka skor, det är frågan?!"
+      }
+    },
     {
       "id":"card-014",
       "title": "Rörelse",
