@@ -1,5 +1,5 @@
 {
-  "version": "1.0.18",
+  "version": "1.0.19",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -14,6 +14,16 @@
     }
   },
   "cards": [
+    {
+      "id":"card-016",
+      "title": "Ta med en bra bok 📚",
+      "headerIcon": "img/book.png",
+      "unlockAt": "2026-05-31T00:00:00+01:00",
+      "text": "❤️ Älskling, det kommer stundtals att vara full fart, men inte hela tiden.\n Det finns tid för att slappa, läsa en bra bok och njuta på diverse platser.📚\n Om barnen tillåter.",
+      "preview": {
+        "teaser": "Full fart hela tiden?!"
+      }
+    },
     {
       "id":"card-015",
       "title": "Kläder efter väder",
