@@ -1,5 +1,5 @@
 {
-  "version": "1.0.21",
+  "version": "1.0.22",
   "site": {
     "title": "Älskling 40!",
     "subtitle": "Snart är det dags…",
@@ -74,7 +74,7 @@
       "title": "Inför avresa",
       "headerIcon": "img/suitcase.png",
       "unlockAt": "2026-06-12T00:00:00+01:00",
-      "text": "❤️️ Älskling, som du nu vet ska vi till London! Hurra, så kul tänker du! Snart dags att behöva göra sig besväret att packa. Men du behöver egentligen bara tänka på tre saker. Att för 5 dagar: 1. Något bekvämt att gå långt i. 2. Något fint att fira i. 3. Något att läsa när den möjligheten ges. Resten löser sig. Flyget avgår 10:55 från Köpenhamn Kastrup och vi behöver ta tåget. Avgång från Parkmätaregatan är 07:50.",
+      "text": "❤️️ Älskling, som du nu vet ska vi till London! Hurra, så kul tänker du! Snart dags att behöva göra sig besväret att packa. Men du behöver egentligen bara tänka på tre saker. Att för 5 dagar: 1. Något bekvämt att gå långt i. 2. Något fint att fira i. 3. Något att läsa när den möjligheten ges. Resten löser sig. Flyget avgår 10:55 från Köpenhamn Kastrup och vi behöver ta tåget. Avgång från Parkmätaregatan är 08:20.",
       "preview": {
         "teaser": "Tre saker"
       }
